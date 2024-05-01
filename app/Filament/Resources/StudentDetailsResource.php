@@ -18,6 +18,9 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class StudentDetailsResource extends Resource
 {
@@ -39,33 +42,33 @@ class StudentDetailsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('')->rowIndex(),
-                TextColumn::make('name')->searchable()->sortable()->summarize(Count::make()->label('Count')),
-                TextColumn::make('roll_no')->searchable()->sortable()->copyable()->copyMessage('Roll Number copied')->copyMessageDuration(1500),
+                TextColumn::make('name')->searchable()->sortable()->summarize(Count::make()->label('Count'))->toggleable(isToggledHiddenByDefault: false),
+                TextColumn::make('roll_no')->searchable()->sortable()->copyable()->copyMessage('Roll Number copied')->copyMessageDuration(1500)->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('email')->searchable()->sortable()->icon('heroicon-m-envelope')->iconColor('primary')->copyable()->copyMessage('Email copied')->copyMessageDuration(1500),
                 TextColumn::make('course')->toggleable(isToggledHiddenByDefault: true)->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'B.E' => 'gray',
                     'B.Tech' => 'info'
                 }),
-                TextColumn::make('department')->sortable()->wrap(),
+                TextColumn::make('department')->sortable()->wrap()->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('date_of_admission')->date()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('gender')->toggleable(isToggledHiddenByDefault: true)->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'Male' => 'primary',
                     'Female' => 'warning'
-                }),
+                })->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('blood_group')->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('year'),
+                TextColumn::make('year')->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('status')->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'Active' => 'success',
                     'Inactive' => 'danger'
-                }),
+                })->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('accommodation')->label('Accomodation')->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'Hosteller' => 'info',
                     'Dayscholar' => 'danger'
-                }),
+                })->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('residency_status')->toggleable(isToggledHiddenByDefault: true)->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'India' => 'primary',
@@ -77,7 +80,7 @@ class StudentDetailsResource extends Resource
                 TextColumn::make('quota')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')->label('Created On')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')->label('Updated On')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)
-            ])
+            ])->defaultSort('updated_at','desc')
             ->filters([
                 SelectFilter::make('department')
                 ->placeholder('Filter by Department')
@@ -104,13 +107,13 @@ class StudentDetailsResource extends Resource
                     'ME' => 'Mechanical Engineering',
                     'MC' => 'Mechatronics Engineering',
                     'TT' => 'Textile Technology',
-                ])->searchable(),
+                ])->native(0)->searchable(),
                 SelectFilter::make('gender')
                 ->placeholder('Filter by Gender')
                 ->options([
                     'Male' => 'Male',
                     'Female' => 'Female',
-                ]),
+                ])->native(0),
                 Filter::make('from')
                 ->form([
                     DatePicker::make('start')
@@ -154,19 +157,19 @@ class StudentDetailsResource extends Resource
                         'II' => 'II',
                         'III' => 'III',
                         'IV' => 'IV',
-                    ])->searchable(),
+                    ])->native(0)->searchable(),
                 SelectFilter::make('status')
                     ->placeholder('Filter by Status')
                     ->options([
                         'Active' => 'Active',
                         'Inactive' => 'Inactive',
-                    ]),
+                    ])->native(0),
                 SelectFilter::make('accommodation')
                     ->placeholder('Filter by Accommodation')
                     ->options([
                         'Hosteller' => 'Hosteller',
                         'Dayscholar' => 'Dayscholar',
-                    ]),
+                    ])->native(0),
                 SelectFilter::make('community')
                     ->placeholder('Filter by Community')
                     ->options([
@@ -176,33 +179,33 @@ class StudentDetailsResource extends Resource
                         'BCM' => 'BCM',
                         'MBC' => 'MBC',
                         'DC' => 'DC',
-                    ])->searchable(),
+                    ])->native(0)->searchable(),
                 SelectFilter::make('seat_category')
                     ->placeholder('Filter by Seat Category')
                     ->options([
                         'Management' => 'Management',
                         'Government Normal' => 'Government Normal',
                         'Government Special' => 'Government Special',
-                    ]),
+                    ])->native(0),
                 SelectFilter::make('course')
                     ->placeholder('Filter by Course')
                     ->options([
                         'B.E' => 'B.E',
                         'B.Tech' => 'B.Tech',
-                    ]),
+                    ])->native(0),
                 SelectFilter::make('religion')
                     ->placeholder('Filter by Religion')
                     ->options([
                         'Hindu' => 'Hindu',
                         'Muslim' => 'Muslim',
                         'Christian' => 'Christian',
-                    ]),
+                    ])->native(0),
                 SelectFilter::make('residency_status')
                     ->placeholder('Filter by Residency Status')
                     ->options([
                         'India' => 'India',
                         'Other' => 'Other',
-                    ]),
+                    ])->native(0),
                 SelectFilter::make('blood_group')
                     ->placeholder('Filter by Blood Group')
                     ->options([
@@ -214,7 +217,7 @@ class StudentDetailsResource extends Resource
                         'O-' => 'O-',
                         'AB+' => 'AB+',
                         'AB-' => 'AB-',
-                    ])->searchable()
+                    ])->native(0)->searchable()
             ], layout: FiltersLayout::AboveContentCollapsible)
             ->actions([
                 ActionGroup::make([
@@ -223,13 +226,19 @@ class StudentDetailsResource extends Resource
                     Tables\Actions\DeleteAction::make()->successNotification(
                         Notification::make()
                             ->danger()
-                            ->title('User Deleted'),
+                            ->title('Student Detail Deleted'),
                     )
                 ])->tooltip('Actions')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make('table')->exports([
+                        ExcelExport::make()->fromTable()->only([
+                        'name', 'roll_no', 'email', 'course', 'department', 'year', 'status', 'accommodation', 'blood_group', 'date_of_admission', 'gender', 'community', 'religion', 'seat_category', 'quota','residency_status'
+                        ])
+                        ->askForFilename(),
+                    ])->icon('heroicon-s-folder-arrow-down')->color('success')->label('Export Into Excel')
                 ]),
             ]);
     }

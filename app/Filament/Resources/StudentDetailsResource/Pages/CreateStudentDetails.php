@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\StudentDetailsResource\Pages;
 
 use App\Filament\Resources\StudentDetailsResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateStudentDetails extends CreateRecord
@@ -12,5 +11,9 @@ class CreateStudentDetails extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
+    }
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Student Detail Created';
     }
 }

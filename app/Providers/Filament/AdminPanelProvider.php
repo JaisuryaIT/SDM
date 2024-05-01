@@ -30,6 +30,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             ->login()
             ->topNavigation()
+            ->brandName('Stduent Affairs')
+            ->brandLogo(asset('logo.jpg'))
+            ->brandLogoHeight('3rem')
+            ->favicon(asset('logo1.jpg'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -37,8 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                Widgets\AccountWidget::class
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -57,7 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugin(
                 ThemesPlugin::make()
-                ->canViewThemesPage(fn () => 1)
+                ->canViewThemesPage(fn () => 0)
             )
             ->plugin(FilamentProgressbarPlugin::make()->color('#F33A6A'));;
     }

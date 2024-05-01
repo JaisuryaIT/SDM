@@ -22,4 +22,8 @@ class CreateUser extends CreateRecord
         $user = static::getModel()::create($data);
         return $user;
     }
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'User Created';
+    }
 }

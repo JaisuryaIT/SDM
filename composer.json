@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "aymanalhattami/filament-slim-scrollbar": "^2.0",
+        "eightynine/filament-excel-import": "^3.0",
         "filament/filament": "3.2",
         "filament/infolists": "3.2",
         "guzzlehttp/guzzle": "^7.2",
@@ -14,7 +15,8 @@
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "njxqlus/filament-progressbar": "^1.0"
+        "njxqlus/filament-progressbar": "^1.0",
+        "pxlrbt/filament-excel": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
