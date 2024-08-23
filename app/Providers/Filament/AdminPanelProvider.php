@@ -8,7 +8,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Hasnayeen\Themes\ThemesPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -62,6 +61,6 @@ class AdminPanelProvider extends PanelProvider
                 ThemesPlugin::make()
                 ->canViewThemesPage(fn () => 0)
             )
-            ->plugin(FilamentProgressbarPlugin::make()->color('#F33A6A'));;
+            ->plugin(FilamentProgressbarPlugin::make()->color('#F33A6A'));
     }
 }

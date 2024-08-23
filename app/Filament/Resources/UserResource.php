@@ -23,6 +23,7 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -37,7 +38,7 @@ class UserResource extends Resource
                 Fieldset::make('User Details')->schema([Group::make([
                     TextInput::make('name')->required(),
                     TextInput::make('email')->required()->email(),
-                    TextInput::make('password')->required()->password(),
+                    TextInput::make('password')->required()->password()->dehydrateStateUsing(fn (string $state): string => Hash::make($state))->dehydrated(fn (?string $state): bool => filled($state))->revealable(),
                 ])->columnSpan(4)->columns(2),
                 Group::make([
                 Toggle::make('is_admin')->label('Is Admin')

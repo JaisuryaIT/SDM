@@ -6,7 +6,11 @@ use App\Filament\Resources\StudentDetailsResource\Pages;
 use App\Models\StudentDetails;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\DatePicker;
+use Filament\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -32,9 +36,138 @@ class StudentDetailsResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                
-            ]);
+        ->schema([
+            Tabs::make('Tabs')
+                ->tabs([
+                    Tabs\Tab::make('Academic')
+                        ->schema([
+                            TextInput::make('name')
+                                ->label('Name')
+                                ->required()
+                                ->columnSpan(1),
+                            TextInput::make('roll_no')
+                                ->label('Roll Number')
+                                ->required()
+                                ->columnSpan(1),
+                            Select::make('course')
+                                ->label('Course')
+                                ->options([
+                                    'B.E' => 'B.E',
+                                    'B.Tech' => 'B.Tech',
+                                ])
+                                ->columnSpan(1)
+                                ->required(),
+                            TextInput::make('email')
+                                ->label('Email')
+                                ->email()
+                                ->required()
+                                ->columnSpan(1),
+                            Select::make('year')
+                                ->label('Year')
+                                ->options([
+                                    'I' => 'I',
+                                    'II' => 'II',
+                                    'III' => 'III',
+                                    'IV' => 'IV',
+                                ])
+                                ->columnSpan(1)
+                                ->required(),
+                            Select::make('department')
+                                ->label('Department')
+                                ->options([
+                                    'AE' => 'Aeronautical Engineering',
+                                    'AG' => 'Agriculture Engineering',
+                                    'AD' => 'Artificial Intelligence and Data Science',
+                                    'AL' => 'Artificial Intelligence and Machine Learning',
+                                    'AU' => 'Automobile Engineering',
+                                    'BM' => 'Biomedical Engineering',
+                                    'BT' => 'Biotechnology',
+                                    'CE' => 'Civil Engineering',
+                                    'CB' => 'Computer Science & Business Systems',
+                                    'CD' => 'Computer Science & Design',
+                                    'CS' => 'Computer Science & Engineering',
+                                    'CT' => 'Computer Technology',
+                                    'EE' => 'Electrical & Electronics Engineering',
+                                    'EC' => 'Electronics & Communication Engineering',
+                                    'EI' => 'Electronics & Instrumentation Engineering',
+                                    'FT' => 'Fashion Technology',
+                                    'FD' => 'Food Technology',
+                                    'IS' => 'Information Science & Engineering',
+                                    'IT' => 'Information Technology',
+                                    'ME' => 'Mechanical Engineering',
+                                    'MC' => 'Mechatronics Engineering',
+                                    'TT' => 'Textile Technology',
+                                ])
+                                ->columnSpan(1)
+                                ->required(),
+                            \Filament\Forms\Components\DatePicker::make('date_of_admission')
+                                ->label('Date of Admission')
+                                ->required()
+                                ->columnSpan(1),
+                            Select::make('status')
+                                ->label('Status')
+                                ->options([
+                                    'Active' => 'Active',
+                                    'Inactive' => 'Inactive',
+                                ])
+                                ->required()
+                                ->columnSpan(1),
+                            Select::make('accommodation')
+                                ->label('Accommodation')
+                                ->options([
+                                    'Hosteller' => 'Hosteller',
+                                    'Dayscholar' => 'Dayscholar',
+                                ])
+                                ->required()
+                                ->columnSpan(1),
+                        ])->columnSpan(2),
+                    Tabs\Tab::make('Personal')
+                        ->schema([
+                            Select::make('gender')
+                                ->label('Gender')
+                                ->options([
+                                    'Male' => 'Male',
+                                    'Female' => 'Female',
+                                ])
+                                ->required(),
+                            TextInput::make('blood_group')
+                                ->label('Blood Group')
+                                ->required(),
+                            Select::make('residency_status')
+                                ->label('Residency Status')
+                                ->options([
+                                    'India' => 'India',
+                                    'Other' => 'Other',
+                                ])
+                                ->required(),
+                            Select::make('community')
+                                ->label('Community')
+                                ->options([
+                                    'SC' => 'SC',
+                                    'ST' => 'ST',
+                                    'BC' => 'BC',
+                                    'BCM' => 'BCM',
+                                    'MBC' => 'MBC',
+                                    'DC' => 'DC',
+                                ])
+                                ->required(),
+                            Select::make('religion')
+                                ->label('Religion')
+                                ->options([
+                                    'Hindu' => 'Hindu',
+                                    'Muslim' => 'Muslim',
+                                    'Christian' => 'Christian',
+                                ])
+                                ->required(),
+                            TextInput::make('seat_category')
+                                ->label('Seat Category')
+                                ->required(),
+                            TextInput::make('quota')
+                                ->label('Quota')
+                                ->required(),
+                        ]),
+                ])->columnSpan(2),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -116,7 +249,7 @@ class StudentDetailsResource extends Resource
                 ])->native(0),
                 Filter::make('from')
                 ->form([
-                    DatePicker::make('start')
+                    \Filament\Forms\Components\DatePicker::make('start')
                     ->label('Admitted From'),
                 ])
                 ->query(function (Builder $query, array $data): Builder {
@@ -134,7 +267,7 @@ class StudentDetailsResource extends Resource
                 }),
                 Filter::make('to')
                 ->form([
-                    DatePicker::make('end')
+                    \Filament\Forms\Components\DatePicker::make('end')
                     ->label('Admitted To'),
                 ])
                 ->query(function (Builder $query, array $data): Builder {

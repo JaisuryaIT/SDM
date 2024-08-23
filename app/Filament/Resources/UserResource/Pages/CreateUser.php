@@ -17,7 +17,7 @@ class CreateUser extends CreateRecord
     }
     protected function handleRecordCreation(array $data): Model
     {
-        $data['password'] = Hash::make($data['password']);
+        // $data['password'] = Hash::make($data['password']);
         $data['remember_token'] = Str::random(50);
         $user = static::getModel()::create($data);
         return $user;
